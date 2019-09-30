@@ -1,0 +1,40 @@
+From cba0a8d34617044b14f881880c0b7d09cd7c8fce Mon Sep 17 00:00:00 2001
+From: Gavin Smith <gavinsmith0123@gmail.com>
+Date: Fri, 28 Dec 2018 11:26:54 +0000
+Subject: [PATCH 503/759] Fix call to info_find_file.
+
+* info/nodes.c (info_get_nodes_with_defaults): Restore the value
+of the 'fullpath' field of a file structure before calling
+info_find_file.  Otherwise, info_find_file will not recognize
+that a file has been loaded, and load it again.  This can lead
+to a file buffer being freed incorrectly in
+gc_file_buffers_and_nodes, leading to a segmentation fault.
+Segmentation fault reported by Keith Thompson.
+---
+ ChangeLog    | 12 ++++++++++++
+ info/nodes.c |  4 ++--
+ 2 files changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/info/nodes.c b/info/nodes.c
+index d576134cf..8b0f7c45e 100644
+--- a/info/nodes.c
++++ b/info/nodes.c
+@@ -945,13 +945,13 @@ info_get_node_with_defaults (char *filename_in, char *nodename_in,
+             {
+               saved_char = *p;
+               *p = 0;
+-
+               file_in_same_dir = info_add_extension (defaults->fullpath,
+                                                      filename, 0);
++              *p = saved_char;
++
+               if (file_in_same_dir)
+                 file_buffer = info_find_file (file_in_same_dir);
+               free (file_in_same_dir);
+-              *p = saved_char;
+             }
+         }
+     }
+-- 
+2.19.1
+

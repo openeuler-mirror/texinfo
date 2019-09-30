@@ -1,0 +1,35 @@
+From b95ad570e3d31cbdef5d4a6bc164c97e716602d0 Mon Sep 17 00:00:00 2001
+From: "Arnold D. Robbins" <arnold@skeeve.com>
+Date: Wed, 6 Mar 2019 21:17:55 +0200
+Subject: [PATCH 707/759] Fix day one bug handling @ as command character.
+
+---
+ texindex/ti.twjr | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/texindex/ti.twjr b/texindex/ti.twjr
+index ec59f68a5..45aa60e48 100644
+--- a/texindex/ti.twjr
++++ b/texindex/ti.twjr
+@@ -412,7 +412,8 @@ The first character must be either @samp{\} or @samp{@@}
+ 
+ @cindex @code{Special_chars} variable
+ @code{Special_chars} are the two characters that must be preceded by
+-the command character inside the first key.
++the command character inside the first key. This includes the command
++character itself.
+ 
+ @cindex @code{beginfile()} function
+ @cindex @code{Output_file} variable
+@@ -443,7 +444,7 @@ function beginfile(filename)
+       || substr($0, 2, 5) != "entry")
+     fatal(_"%s is not a Texinfo index file\n", filename)
+ 
+-  Special_chars = "{}"
++  Special_chars = "{}" Command_char
+ }
+ @
+ 
+-- 
+2.19.1
+

@@ -1,0 +1,190 @@
+unchanged:
+--- texinfo-6.4/contrib/fix-info-dir.orig	2014-04-22 03:56:56.000000000 +0200
++++ texinfo-6.4/contrib/fix-info-dir	2018-08-08 10:40:42.585496361 +0200
+@@ -28,7 +28,6 @@ if test -z "$LINENO"; then
+ fi
+ 
+ MENU_BEGIN='^\*\([ 	]\)\{1,\}Menu:'
+-MENU_ITEM='^\* ([^ 	]).*:([ 	])+\('
+ MENU_FILTER1='s/^\*\([ 	]\)\{1,\}/* /'
+ MENU_FILTER2='s/\([ 	]\)\{1,\}$//g'
+ 
+unchanged:
+--- texinfo-6.4/info/echo-area.c.orig	2018-07-25 12:42:38.806784712 +0200
++++ texinfo-6.4/info/echo-area.c	2018-07-25 12:43:15.452815108 +0200
+@@ -979,6 +979,7 @@ info_read_completing_internal (const cha
+                 inform_in_echo_area (_("No completions"));
+               else
+                 inform_in_echo_area (_("Not complete"));
++              free (line);
+               continue;
+             }
+         }
+unchanged:
+--- texinfo-6.4/info/info.c.orig	2018-07-25 14:12:18.086188150 +0200
++++ texinfo-6.4/info/info.c	2018-07-25 14:13:00.915223083 +0200
+@@ -295,6 +295,7 @@ get_initial_file (int *argc, char ***arg
+              ref_index, ref_list, ref_slots, 2);
+ 
+           initial_file = MANPAGE_FILE_BUFFER_NAME;
++          free (man_node);
+           return;
+         }
+     }
+unchanged:
+--- texinfo-6.4/info/infomap.c.orig	2017-05-15 18:35:24.000000000 +0200
++++ texinfo-6.4/info/infomap.c	2018-07-30 09:40:58.517674645 +0200
+@@ -603,6 +603,7 @@ fetch_user_maps (char *init_file)
+   compile (inf, filename, &sup_info, &sup_ea);
+ 
+   free (filename);
++  fclose (inf);
+   return 1;
+ }
+ 
+unchanged:
+--- texinfo-6.4/info/m-x.c.orig	2017-05-14 12:55:17.000000000 +0200
++++ texinfo-6.4/info/m-x.c	2018-07-30 10:11:23.799858816 +0200
+@@ -81,7 +81,10 @@ DECLARE_INFO_COMMAND (describe_command,
+       InfoCommand *cmd = named_function (line);
+ 
+       if (!cmd)
+-        return;
++        {
++          free (line);
++          return;
++        }
+ 
+       window_message_in_echo_area ("%s: %s.",
+                                    line, function_documentation (cmd));
+unchanged:
+--- texinfo-6.4/info/makedoc.c.orig	2014-11-07 11:58:55.000000000 +0100
++++ texinfo-6.4/info/makedoc.c	2018-07-30 10:23:55.128644559 +0200
+@@ -427,7 +427,11 @@ process_one_file (char *filename, FILE *
+ 
+       offset++;
+       if (offset >= file_size)
+-        break;
++        {
++          free (func_name);
++          free (func);
++          break;
++        }
+ 
+       doc = xmalloc (1 + (offset - point));
+       strncpy (doc, buffer + point, offset - point);
+unchanged:
+--- texinfo-6.4/info/nodes.c	2018-07-30 10:59:25.515087533 +0200
++++ texinfo-6.4/info/nodes.c	2018-07-30 11:10:47.547853493 +0200
+@@ -305,7 +305,10 @@
+       for (p = 0; nodedef[p] && nodedef[p] != INFO_TAGSEP; p++)
+         ;
+       if (nodedef[p] != INFO_TAGSEP)
+-        continue;
++        {
++          free (entry);
++          continue;
++        }
+ 
+       entry->nodename = xmalloc (p + 1);
+       strncpy (entry->nodename, nodedef, p);
+@@ -479,6 +482,7 @@
+                 }
+               file_buffer->subfiles = NULL;
+               free_file_buffer_tags (file_buffer);
++              free (subfiles);
+               return;
+             }
+ 
+unchanged:
+--- texinfo-6.4/info/session.c.orig	2018-07-30 11:11:33.997905448 +0200
++++ texinfo-6.4/info/session.c	2018-07-30 11:38:27.135721289 +0200
+@@ -3554,6 +3554,7 @@ DECLARE_INFO_COMMAND (info_goto_invocati
+   if (!line)
+     {
+       info_abort_key (window, 0);
++      free (default_program_name);
+       return;
+     }
+   if (*line)
+unchanged:
+--- texinfo-6.4/info/variables.c.def24	2017-05-03 21:48:19.000000000 +0200
++++ texinfo-6.4/info/variables.c	2018-07-30 12:53:06.692694120 +0200
+@@ -361,6 +361,7 @@ read_variable_name (char *prompt, WINDOW
+ {
+   char *line;
+   REFERENCE **variables;
++  VARIABLE_ALIST *alist;
+ 
+   /* Get the completion array of variable names. */
+   variables = make_variable_completions_array ();
+@@ -384,7 +385,9 @@ read_variable_name (char *prompt, WINDOW
+       return NULL;
+     }
+ 
+-  return variable_by_name (line);
++  alist = variable_by_name (line);
++  free (line);
++  return alist;
+ }
+ 
+ /* Make an array of REFERENCE which actually contains the names of the
+diff -u texinfo-6.4/install-info/install-info.c texinfo-6.4/install-info/install-info.c
+--- texinfo-6.4/install-info/install-info.c	2018-07-30 13:47:00.265812976 +0200
++++ texinfo-6.4/install-info/install-info.c	2018-07-30 13:53:50.427431251 +0200
+@@ -867,10 +867,16 @@
+       char *command = concat (*compression_program, " -d", "");
+ 
+       if (gzclose (f) < 0)
+-        return 0;
++        {
++          free (command);
++          return 0;
++        }
+       p = freopen (*opened_filename, FOPEN_RBIN, stdin);
+       if (!p)
+-        return 0;
++        {
++          free (command);
++          return 0;
++        }
+       p = popen (command, "r");
+       if (!p)
+         {
+@@ -880,6 +886,7 @@
+         }
+       else
+         *is_pipe = 1;
++      free (command);
+       return p;
+     }
+   else
+@@ -923,7 +930,10 @@
+                                      &pipe_p);
+ 
+   if (!f)
+-    return 0;
++    {
++      free (data);
++      return 0;
++    }
+ 
+   for (;;)
+     {
+@@ -983,6 +993,7 @@
+     {
+       char *command = concat (compression_program, ">", dirfile_tmp);
+       output = popen (command, "w");
++      free (command);
+     }
+   else
+     output = fopen (dirfile_tmp, "w");
+@@ -1724,6 +1735,8 @@
+ 
+       format_entry (name, name_len, desc, desc_len, calign, align, 
+                     maxwidth, &entry->text, &entry->text_len);
++      free (desc);
++      free (name);
+     }
+ }
+ 

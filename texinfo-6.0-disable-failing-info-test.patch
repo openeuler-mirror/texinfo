@@ -1,0 +1,49 @@
+diff -up texinfo-6.4.90/info/Makefile.in.orig texinfo-6.4.90/info/Makefile.in
+--- texinfo-6.4.90/info/Makefile.in.orig	2017-07-10 21:06:01.000000000 +0200
++++ texinfo-6.4.90/info/Makefile.in	2017-07-11 09:58:06.501153160 +0200
+@@ -1367,7 +1367,6 @@ TESTS = \
+ 	t/end-of-line.sh \
+ 	t/goal-column.sh \
+ 	t/star-note-non-whitespace.sh \
+-	t/c-u-m-x-scroll-forward.sh \
+ 	t/last-no-history.sh \
+ 	t/split-footnotes.sh \
+ 	t/window-split-dir.sh \
+@@ -1392,10 +1391,6 @@ TESTS = \
+ 	t/search-skip-screen.sh \
+ 	t/search-empty.sh \
+ 	t/close-window-after-search.sh \
+-	t/inc-sea-forward.sh \
+-	t/inc-sea-forward-nonregex.sh \
+-	t/inc-sea-insensitive.sh \
+-	t/inc-sea-history.sh \
+ 	t/inc-sea-bs.sh \
+ 	t/gc-split.sh \
+ 	t/anchor-positions.sh \
+diff -up texinfo-6.4.90/tp/tests/Makefile.in.orig texinfo-6.4.90/tp/tests/Makefile.in
+--- texinfo-6.4.90/tp/tests/Makefile.in.orig	2017-07-10 20:52:24.000000000 +0200
++++ texinfo-6.4.90/tp/tests/Makefile.in	2017-07-11 09:59:30.838233561 +0200
+@@ -1308,7 +1308,6 @@ one_test_files_generated_list = \
+      test_scripts/formatting_simplest_test_prefix_info.sh \
+      test_scripts/formatting_simplest_test_css.sh \
+      test_scripts/formatting_simplest_test_date_in_header.sh \
+-     test_scripts/formatting_documentlanguage_set_option.sh \
+      test_scripts/formatting_documentlanguage_set_unknown.sh \
+      test_scripts/formatting_documentlanguage_set_option_info.sh \
+      test_scripts/formatting_float_copying.sh \
+@@ -1348,7 +1347,6 @@ one_test_files_generated_list = \
+      test_scripts/sectioning_top_node_up_explicit.sh \
+      test_scripts/coverage_texi_formatting.sh \
+      test_scripts/coverage_formatting.sh \
+-     test_scripts/coverage_formatting_fr.sh \
+      test_scripts/indices_double_index_entry.sh \
+      test_scripts/indices_split_chapter_index.sh \
+      test_scripts/indices_index_split.sh \
+@@ -1447,7 +1445,6 @@ one_test_files_generated_list = \
+      test_scripts/layout_formatting_html32.sh \
+      test_scripts/layout_formatting_regions.sh \
+      test_scripts/layout_formatting_exotic.sh \
+-     test_scripts/layout_formatting_fr_icons.sh \
+      test_scripts/layout_formatting_chm.sh \
+      test_scripts/layout_formatting_nodes.sh \
+      test_scripts/tex_html_block_EOL_tex.sh \

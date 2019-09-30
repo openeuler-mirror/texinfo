@@ -1,0 +1,37 @@
+From 4a3d0f3059583200a45ced680a860a43f83c06e0 Mon Sep 17 00:00:00 2001
+From: Gavin Smith <gavinsmith0123@gmail.com>
+Date: Mon, 4 Jun 2018 09:46:18 +0000
+Subject: [PATCH 051/759] fix misleading warning about node names
+
+git-svn-id: svn://127.0.0.1/svn_repo/texinfo/trunk@8003 39fee189-59d7-47db-b5d4-205258b72aed
+---
+ ChangeLog                       | 11 +++++++++++
+ tp/Texinfo/Convert/Plaintext.pm |  6 ++++++
+ 2 files changed, 17 insertions(+)
+
+diff --git a/tp/Texinfo/Convert/Plaintext.pm b/tp/Texinfo/Convert/Plaintext.pm
+index 581e94c10..f745f1c6d 100644
+--- a/tp/Texinfo/Convert/Plaintext.pm
++++ b/tp/Texinfo/Convert/Plaintext.pm
+@@ -2064,12 +2064,18 @@ sub _convert($$)
+           }
+           # node name
+           $self->{'formatters'}->[-1]->{'suppress_styles'} = 1;
++
++          my $maybe_file
++            = get_pending($self->{'formatters'}->[-1]->{'container'});
+           my $node_text = _convert($self, {'type' => '_code',
+                                            'contents' => $node_content});
+           delete $self->{'formatters'}->[-1]->{'suppress_styles'};
+ 
+           my $node_text_checked = $node_text 
+              .get_pending($self->{'formatters'}->[-1]->{'container'});
++          $maybe_file =~ s/^\s*//;
++          $maybe_file = quotemeta $maybe_file;
++          $node_text_checked =~ s/^\s*$maybe_file//;
+           $quoting_required = 0;
+           if ($node_text_checked =~ /([,\t\.])/m ) {
+               if ($self->get_conf('INFO_SPECIAL_CHARS_WARNING')) {
+-- 
+2.19.1
+
