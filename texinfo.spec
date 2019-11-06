@@ -1,28 +1,23 @@
 %global tex_texinfo %{_datadir}/texmf/tex/texinfo
+%global __provides_exclude ^perl\\(.*Texinfo.*\\)$
+%global __requires_exclude ^perl\\(.*Texinfo.*\\)$
 
 Name: texinfo
 Version: 6.5
-Release: 13
-Summary: Tools needed to create Texinfo format documentation files
+Release: 17
+Summary: The GNU Documentation System
 License: GPLv3+
 Url: http://www.gnu.org/software/texinfo/
 Source0: ftp://ftp.gnu.org/gnu/texinfo/texinfo-%{version}.tar.xz
 Source1: ftp://ftp.gnu.org/gnu/texinfo/texinfo-%{version}.tar.xz.sig
 
 Patch0: texinfo-4.12-zlib.patch
-# Patch1: this is needed just for koji/mock, all tests pass fine in local build
 Patch1: texinfo-6.0-disable-failing-info-test.patch
-# Patch2: rhbz#1348671, because of OSTree
 Patch2: texinfo-6.1-install-info-use-create-tmp-then-rename-pattern.patch
-# Patch3: we need to fix template fix-info-dir generates
 Patch3: info-6.5-sync-fix-info-dir.patch
-# Update to 2018-03-10 texinfo.tex
 Patch4: texinfo-20180310-texinfo.tex.patch
-# rhbz#1592433, bug in fix-info-dir --delete
 Patch5: texinfo-6.5-fix-info-dir.patch
-# Patch6: rhbz#1590308, fixes test fail with unescaped left brace
 Patch6: texinfo-6.5-fix-for-perl-5.28.patch
-# Patch7: fixes issues detected by static analysis
 Patch7: texinfo-6.5-covscan-fixes.patch
 
 Patch6000:  fix-misleading-warning-about-node-names.patch
@@ -37,45 +32,35 @@ Patch6007:  Fix-day-one-bug-handling-as-command-character.patch
 BuildRequires: gcc perl-generators zlib-devel ncurses-devel help2man
 BuildRequires: perl(Data::Dumper) perl(Locale::Messages) perl(Unicode::EastAsianWidth) perl(Text::Unidecode) perl(Storable)
 
-# Texinfo perl packages are not installed in default perl library dirs
-%global __provides_exclude ^perl\\(.*Texinfo.*\\)$
-%global __requires_exclude ^perl\\(.*Texinfo.*\\)$
-
 %description
-Texinfo is a documentation system that can produce both online
-information and printed output from a single source file. The GNU
-Project uses the Texinfo file format for most of its documentation.
+Texinfo is a documentation system that uses a single source file to produce
+both online information and printed output. Instead of writing different documents
+for online presentation and another for printed work, you need have only one document.
 
-Install texinfo if you want a documentation system for producing both
-online and print documentation from the same source file and/or if you
-are going to write documentation for the GNU Project.
+Texinfo can produce output in plain ASCII, HTML, its own hypertext format called Info,
+and (using TeX) DVI format. It includes the makeinfo program.
 
 %package tex
-Summary: Tools for formatting Texinfo documentation files using TeX
+Summary: Tools for formatting Texinfo documents
 Requires: texinfo = %{version}-%{release} tex(tex) tex(epsf.tex)
 Requires(post): texlive-tetex
 Requires(postun): texlive-tetex
 
 %description tex
-Texinfo is a documentation system that can produce both online
-information and printed output from a single source file. The GNU
-Project uses the Texinfo file format for most of its documentation.
+This package provides tools for format most of the documents
+which produced by texinfo documentation system.
 
 %package -n info
-Summary: A stand-alone TTY-based reader for GNU texinfo documentation
+Summary: TTY-based reader of the GNU texinfo documentation
 
 %description -n info
-The GNU project uses the texinfo file format for much of its
-documentation. The info package provides a standalone TTY-based
-browser program for viewing texinfo files.
+This package provides a standalone TTY-based browser program for viewing texinfo files.
 
 %package  help
-Summary: A stand-alone TTY-based reader for GNU texinfo documentation
+Summary: Documentation for texinfo
 
 %description  help
-The GNU project uses the texinfo file format for much of its
-documentation. The help package provides a standalone TTY-based
-browser program for viewing texinfo files.
+This package contains help documentation for texinfo.
 
 %prep
 %autosetup -p1
@@ -103,10 +88,10 @@ install -Dpm0755 -t %{buildroot}%{_sbindir} contrib/fix-info-dir
 export ALL_TESTS=yes
 %make_build check
 
-%post 
+%post
 %{_bindir}/texconfig-sys rehash 2> /dev/null || :
 
-%postun 
+%postun
 %{_bindir}/texconfig-sys rehash 2> /dev/null || :
 
 %transfiletriggerin help -- %{_infodir}
@@ -120,44 +105,59 @@ export ALL_TESTS=yes
 %doc AUTHORS ChangeLog NEWS README TODO
 %license COPYING
 %{_bindir}/makeinfo
-%{_bindir}/texi2any
 %{_bindir}/pod2texi
+%{_bindir}/texi2any
 %{_datadir}/texinfo
 
 %files tex
+%{tex_texinfo}/
+%{_bindir}/pdftexi2dvi
 %{_bindir}/texindex
 %{_bindir}/texi2dvi
 %{_bindir}/texi2pdf
-%{_bindir}/pdftexi2dvi
 
 %files -n info
 %license COPYING
 %{_bindir}/info
-/sbin/install-info
 %{_sbindir}/fix-info-dir
+/sbin/install-info
 
 %files help
 %license COPYING
 %{_infodir}/info-stnd.info*
+%{_infodir}/texinfo*
+%{_mandir}/man1/makeinfo.1*
+%{_mandir}/man1/pdftexi2dvi.1*
+%{_mandir}/man1/pod2texi.1*
 %{_mandir}/man1/info.1*
 %{_mandir}/man1/install-info.1*
-%{_mandir}/man5/info.5*
-%{tex_texinfo}/
-%{_mandir}/man1/texindex.1*
 %{_mandir}/man1/texi2dvi.1*
 %{_mandir}/man1/texi2pdf.1*
-%{_mandir}/man1/pdftexi2dvi.1*
-%{_mandir}/man1/makeinfo.1*
-%{_mandir}/man5/texinfo.5* 
+%{_mandir}/man1/texindex.1*
 %{_mandir}/man1/texi2any.1*
-%{_mandir}/man1/pod2texi.1*
-%{_infodir}/texinfo*
+%{_mandir}/man5/info.5*
+%{_mandir}/man5/texinfo.5*
 %ghost %{_infodir}/dir
 %ghost %{_infodir}/dir.old
 
 %changelog
+* Tue Oct 29 2019 openEuler Buildteam <buildteam@openeuler.org> - 6.5-17
+- Move tex_texinfo from help to tex package
+
+* Sat Oct 26 2019 openEuler Buildteam <buildteam@openeuler.org> - 6.5-16
+- Adjust the format and description
+
+* Fri Oct 25 2019 openEuler Buildteam <buildteam@openeuler.org> - 6.5-15
+- Type:bugfix
+- Id:NA
+- SUG:NA
+- DESC: Restore previous version of 6.5-13
+
+* Mon Oct 21 2019 openEuler Buildteam <buildteam@openeuler.org> - 6.5-14
+- remove rpm texinfo-tex, info
+
 * Wed Sep 26 2019 openEuler Buildteam <buildteam@openeuler.org> - 6.5-13
-- Add rpm texinfo-tex, info 
+- Add rpm texinfo-tex, info
 
 * Tue Sep 17 2019 openEuler Buildteam <buildteam@openeuler.org> - 6.5-12
 - Package init
