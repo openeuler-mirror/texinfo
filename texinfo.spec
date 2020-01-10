@@ -3,31 +3,20 @@
 %global __requires_exclude ^perl\\(.*Texinfo.*\\)$
 
 Name: texinfo
-Version: 6.5
-Release: 17
+Version: 6.6
+Release: 2
 Summary: The GNU Documentation System
 License: GPLv3+
 Url: http://www.gnu.org/software/texinfo/
 Source0: ftp://ftp.gnu.org/gnu/texinfo/texinfo-%{version}.tar.xz
 Source1: ftp://ftp.gnu.org/gnu/texinfo/texinfo-%{version}.tar.xz.sig
 
-Patch0: texinfo-4.12-zlib.patch
-Patch1: texinfo-6.0-disable-failing-info-test.patch
-Patch2: texinfo-6.1-install-info-use-create-tmp-then-rename-pattern.patch
-Patch3: info-6.5-sync-fix-info-dir.patch
-Patch4: texinfo-20180310-texinfo.tex.patch
-Patch5: texinfo-6.5-fix-info-dir.patch
-Patch6: texinfo-6.5-fix-for-perl-5.28.patch
-Patch7: texinfo-6.5-covscan-fixes.patch
-
-Patch6000:  fix-misleading-warning-about-node-names.patch
-Patch6001:  perl-5.28-thread-safe-locales.patch
-Patch6002:  MiscXS-avoid-memory-leak.patch
-Patch6003:  XS-avoid-memory-leak.patch
-Patch6004:  XS-avoid-memory-leaks.patch
-Patch6005:  Fix-call-to-info_find_file.patch
-Patch6006:  Avoid-memory-leak-for-malformed-files.patch
-Patch6007:  Fix-day-one-bug-handling-as-command-character.patch
+Patch0001: texinfo-4.12-zlib.patch
+Patch0002: texinfo-6.0-disable-failing-info-test.patch
+Patch0003: texinfo-6.1-install-info-use-create-tmp-then-rename-pattern.patch
+Patch0004: info-6.5-sync-fix-info-dir.patch
+Patch0005: texinfo-6.5-fix-info-dir.patch
+Patch0006: texinfo-6.5-covscan-fixes.patch
 
 BuildRequires: gcc perl-generators zlib-devel ncurses-devel help2man
 BuildRequires: perl(Data::Dumper) perl(Locale::Messages) perl(Unicode::EastAsianWidth) perl(Text::Unidecode) perl(Storable)
@@ -141,6 +130,9 @@ export ALL_TESTS=yes
 %ghost %{_infodir}/dir.old
 
 %changelog
+* Fri Jan 10 2020 openEuler Buildteam <buildteam@openeuler.org> - 6.6-2
+- update to 6.6-2
+
 * Tue Oct 29 2019 openEuler Buildteam <buildteam@openeuler.org> - 6.5-17
 - Move tex_texinfo from help to tex package
 
