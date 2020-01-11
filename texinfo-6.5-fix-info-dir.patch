@@ -1,14 +1,14 @@
 This fixes two issues:
-
+ 
 https://bugzilla.redhat.com/show_bug.cgi?id=1592433
 This is a bug in fix-info-dir --delete
 (Hunk 3)
-
+ 
 https://bugzilla.redhat.com/show_bug.cgi?id=1614162
 This is a weird infinite loop that happens when fix-info-dir is run with stderr
 redirected to /dev/null while /dev/null doesn't exist (or isn't a device)
 (Hunks 1 and 2)
-
+ 
 diff --git a/contrib/fix-info-dir b/contrib/fix-info-dir
 index 4439ada..9240060 100755
 --- a/contrib/fix-info-dir
