@@ -3,8 +3,8 @@
 %global __requires_exclude ^perl\\(.*Texinfo.*\\)$
 
 Name: texinfo
-Version: 6.6
-Release: 2
+Version: 6.7
+Release: 1
 Summary: The GNU Documentation System
 License: GPLv3+
 Url: http://www.gnu.org/software/texinfo/
@@ -19,7 +19,7 @@ Patch0005: texinfo-6.5-fix-info-dir.patch
 Patch0006: texinfo-6.5-covscan-fixes.patch
 
 BuildRequires: gcc perl-generators zlib-devel ncurses-devel help2man
-BuildRequires: perl(Data::Dumper) perl(Locale::Messages) perl(Unicode::EastAsianWidth) perl(Text::Unidecode) perl(Storable)
+BuildRequires: perl(Data::Dumper) perl(Locale::Messages) perl(Unicode::EastAsianWidth) perl(Text::Unidecode) perl(Storable) perl(Unicode::Normalize)
 
 %description
 Texinfo is a documentation system that uses a single source file to produce
@@ -34,6 +34,10 @@ Summary: Tools for formatting Texinfo documents
 Requires: texinfo = %{version}-%{release} tex(tex) tex(epsf.tex)
 Requires(post): texlive-tetex
 Requires(postun): texlive-tetex
+Provides: tex-texinfo = %{version}-%{release}
+Obsoletes: tex-texinfo < %{version}-%{release}
+Provides: texlive-texinfo > 9:2019-15
+Obsoletes: texlive-texinfo <= 9:2019-15
 
 %description tex
 This package provides tools for format most of the documents
@@ -130,6 +134,9 @@ export ALL_TESTS=yes
 %ghost %{_infodir}/dir.old
 
 %changelog
+* Fri Jul 17 2020 chengguipeng <chengguipeng1@huawei.com> - 6.7-1
+- upgrade to 6.7-1
+
 * Fri Jan 10 2020 openEuler Buildteam <buildteam@openeuler.org> - 6.6-2
 - update to 6.6-2
 
