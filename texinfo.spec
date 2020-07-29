@@ -34,8 +34,9 @@ Summary: Tools for formatting Texinfo documents
 Requires: texinfo = %{version}-%{release} tex(tex) tex(epsf.tex)
 Requires(post): texlive-tetex
 Requires(postun): texlive-tetex
-Provides: tex-texinfo
-Provides: texlive-texinfo
+Provides: tex-texinfo = %{version}-%{release}
+Obsoletes: tex-texinfo < %{version}-%{release}
+Provides: texlive-texinfo > 9:2019-15
 Obsoletes: texlive-texinfo <= 9:2019-15
 
 %description tex
