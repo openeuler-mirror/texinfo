@@ -4,12 +4,12 @@
 
 Name: texinfo
 Version: 6.7
-Release: 1
+Release: 2
 Summary: The GNU Documentation System
 License: GPLv3+
 Url: http://www.gnu.org/software/texinfo/
-Source0: ftp://ftp.gnu.org/gnu/texinfo/texinfo-%{version}.tar.xz
-Source1: ftp://ftp.gnu.org/gnu/texinfo/texinfo-%{version}.tar.xz.sig
+Source0: https://ftp.gnu.org/gnu/texinfo/texinfo-%{version}.tar.xz
+Source1: https://ftp.gnu.org/gnu/texinfo/texinfo-%{version}.tar.xz.sig
 
 Patch0001: texinfo-4.12-zlib.patch
 Patch0002: texinfo-6.0-disable-failing-info-test.patch
@@ -134,6 +134,9 @@ export ALL_TESTS=yes
 %ghost %{_infodir}/dir.old
 
 %changelog
+* Wed Dec 16 2020 zhanzhimin <zhanzhimin@huawei.com> - 6.7-2
+- Update Source0
+
 * Fri Jul 17 2020 chengguipeng <chengguipeng1@huawei.com> - 6.7-1
 - upgrade to 6.7-1
 
