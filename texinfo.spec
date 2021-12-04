@@ -3,20 +3,20 @@
 %global __requires_exclude ^perl\\(.*Texinfo.*\\)$
 
 Name: texinfo
-Version: 6.7
-Release: 2
+Version: 6.8
+Release: 1
 Summary: The GNU Documentation System
 License: GPLv3+
 Url: http://www.gnu.org/software/texinfo/
 Source0: https://ftp.gnu.org/gnu/texinfo/texinfo-%{version}.tar.xz
 Source1: https://ftp.gnu.org/gnu/texinfo/texinfo-%{version}.tar.xz.sig
 
-Patch0001: texinfo-4.12-zlib.patch
-Patch0002: texinfo-6.0-disable-failing-info-test.patch
-Patch0003: texinfo-6.1-install-info-use-create-tmp-then-rename-pattern.patch
-Patch0004: info-6.5-sync-fix-info-dir.patch
-Patch0005: texinfo-6.5-fix-info-dir.patch
-Patch0006: texinfo-6.5-covscan-fixes.patch
+Patch0001: texinfo-6.0-disable-failing-info-test.patch
+Patch0002: texinfo-6.1-install-info-use-create-tmp-then-rename-pattern.patch
+Patch0003: info-6.5-sync-fix-info-dir.patch
+Patch0004: texinfo-6.5-fix-info-dir.patch
+Patch0005: texinfo-6.5-covscan-fixes.patch
+Patch0006: texinfo-6.8-undo-gnulib-nonnul.patch
 
 BuildRequires: gcc perl-generators zlib-devel ncurses-devel help2man
 BuildRequires: perl(Data::Dumper) perl(Locale::Messages) perl(Unicode::EastAsianWidth) perl(Text::Unidecode) perl(Storable) perl(Unicode::Normalize)
@@ -134,6 +134,9 @@ export ALL_TESTS=yes
 %ghost %{_infodir}/dir.old
 
 %changelog
+* Sat Dec 04 2021 wuchaochao <wuchaochao4@huawei.com> - 6.8-1
+- update version to 6.8
+
 * Wed Dec 16 2020 zhanzhimin <zhanzhimin@huawei.com> - 6.7-2
 - Update Source0
 
