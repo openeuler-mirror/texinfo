@@ -4,7 +4,7 @@
 
 Name: texinfo
 Version: 6.8
-Release: 1
+Release: 2
 Summary: The GNU Documentation System
 License: GPLv3+
 Url: http://www.gnu.org/software/texinfo/
@@ -114,6 +114,8 @@ export ALL_TESTS=yes
 %{_bindir}/info
 %{_sbindir}/fix-info-dir
 /sbin/install-info
+%ghost %{_infodir}/dir
+%ghost %{_infodir}/dir.old
 
 %files help
 %license COPYING
@@ -130,10 +132,11 @@ export ALL_TESTS=yes
 %{_mandir}/man1/texi2any.1*
 %{_mandir}/man5/info.5*
 %{_mandir}/man5/texinfo.5*
-%ghost %{_infodir}/dir
-%ghost %{_infodir}/dir.old
 
 %changelog
+* Fri Feb 18 2022 yangcheng <yangcheng87@h-partners.com> - 6.8-2
+- Move files to info subpackage to solve uninstall error
+
 * Sat Dec 04 2021 wuchaochao <wuchaochao4@huawei.com> - 6.8-1
 - update version to 6.8
 
