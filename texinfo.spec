@@ -4,7 +4,7 @@
 
 Name: texinfo
 Version: 6.8
-Release: 2
+Release: 3
 Summary: The GNU Documentation System
 License: GPLv3+
 Url: http://www.gnu.org/software/texinfo/
@@ -32,8 +32,10 @@ and (using TeX) DVI format. It includes the makeinfo program.
 %package tex
 Summary: Tools for formatting Texinfo documents
 Requires: texinfo = %{version}-%{release} tex(tex) tex(epsf.tex)
+%ifnarch i686
 Requires(post): texlive-tetex
 Requires(postun): texlive-tetex
+%endif
 Provides: tex-texinfo = %{version}-%{release}
 Obsoletes: tex-texinfo < %{version}-%{release}
 Provides: texlive-texinfo > 9:2019-15
@@ -134,6 +136,9 @@ export ALL_TESTS=yes
 %{_mandir}/man5/texinfo.5*
 
 %changelog
+* Sat Feb 19 2022 yangcheng <yangcheng87@h-partners.com> - 6.8-3
+- add i686 options,fix build failure on i686
+
 * Fri Feb 18 2022 yangcheng <yangcheng87@h-partners.com> - 6.8-2
 - Move files to info subpackage to solve uninstall error
 
